@@ -36,24 +36,37 @@ export const onCreatedApt = functions.database
       Go get that 🏠! 
     `;
 
-    const { TWILIO_AUTH_TOKEN, TWILIO_ACCOUNT_SID, TWILIO_PHONE, PHONE } =
-      process.env;
+    const {
+      TWILIO_AUTH_TOKEN,
+      TWILIO_ACCOUNT_SID,
+      TWILIO_PHONE,
+      PHONE,
+      PHONE_2,
+    } = process.env;
     const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
-    await client.messages.create({
+    const msg1 = client.messages.create({
       body: message,
       from: `${TWILIO_PHONE}`,
       to: `${PHONE}`,
     });
 
-    console.log("Message sent!");
+    const msg2 = client.messages.create({
+      body: message,
+      from: `${TWILIO_PHONE}`,
+      to: `${PHONE_2}`,
+    });
+
+    await Promise.all([msg1, msg2]);
+
+    console.log(`Messages sent at ${new Date().toISOString()}!`);
   });
 
 const hashingFunc = (str: string) =>
   crypto.createHash("sha256").update(str, "utf8").digest("hex");
 
 export const checkApartments = functions.pubsub
-  .schedule("every 5 minutes")
+  .schedule("every 15 minutes")
   .onRun(async () => {
     const date = new Date().toISOString();
     console.log(`Checking apartments at ${date}....`);
