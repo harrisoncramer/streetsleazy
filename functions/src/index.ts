@@ -157,3 +157,32 @@ export const checkApartments = functions.pubsub
 
     console.log("Done!");
   });
+
+  export const getPosts = functions.pubsub
+  .schedule("every 5 minutes")
+  .onRun(async () => {
+    const date = new Date().toISOString();
+    console.log(`Getting posts at ${date}....`);
+
+    const { data } = await axios.get("https://harrisoncramer.me/blog");
+
+    const db = getDatabase();
+
+    async function storePost(id: string, link: string) {
+      console.log(`Saving ${link}`);
+      const reference = ref(db, "posts/" + id);
+      await set(reference, );
+    }
+
+    const $ = cheerio.load(data);
+    const links = Array.from($("h2"));
+
+    const saves = posts.map(post => storePost(post))
+    await Promise.all(saves)
+    console.log("Posts saved!");
+
+    goOffline(db);
+
+    console.log("Done!");
+  });
+
