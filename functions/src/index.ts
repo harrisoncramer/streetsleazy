@@ -171,13 +171,17 @@ export const checkApartments = functions.pubsub
     async function storePost(id: string, link: string) {
       console.log(`Saving ${link}`);
       const reference = ref(db, "posts/" + id);
-      await set(reference, );
+      await set(reference, link);
     }
 
     const $ = cheerio.load(data);
-    const links = Array.from($("h2"));
+    const links = Array.from($("h2")).map(el => $(el).text())
 
-    const saves = posts.map(post => storePost(post))
+    const saves = links.map(link => {
+      const hash = hashingFunc(link)
+      storePost(hash, link)
+    })
+
     await Promise.all(saves)
     console.log("Posts saved!");
 
