@@ -1,6 +1,6 @@
 # StreetSleazy 🏡
 
-We are looking for an apartment and it's hard. This applicaiton will help us find one quickly!
+We are looking for an apartment and it's hard. This application will help us find one quickly!
 
 # How?
 
